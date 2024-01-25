@@ -6,16 +6,14 @@ import { useNavigate } from 'react-router-dom'
 const Login = () => {
   const { fetchLogin } = useStore()
   const navigate = useNavigate()
-  const onFinish = (val) => {
+  const onFinish = async (val) => {
     console.log("hai", val)
     // 调用登录接口
-    fetchLogin(val)
+    await fetchLogin(val)
     // 路由跳转
-    setTimeout(() => {
-      navigate('/')
-      // 提示
-      message.success('登录成功')
-    }, 600)
+    navigate('/')
+    // 提示
+    message.success('登录成功')
   }
   return (
     <div className="login">
