@@ -22,7 +22,8 @@ const Login = () => {
         <Form
             name="basic"
             initialValues={{
-              remember: true,
+              mobile: '17826808246',
+              code: '246810',
             }}
             onFinish={onFinish}
             autoComplete="off">

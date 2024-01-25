@@ -6,36 +6,58 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons'
 import './index.scss'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import useStore from '@/store'
 
 const { Header, Sider } = Layout
 
 const items = [
   {
     label: '首页',
-    key: '1',
+    key: '/',
     icon: <HomeOutlined />,
   },
   {
     label: '文章管理',
-    key: '2',
+    key: '/article',
     icon: <DiffOutlined />,
   },
   {
     label: '创建文章',
-    key: '3',
+    key: '/publish',
     icon: <EditOutlined />,
   },
 ]
 
 const GeekLayout = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const selectedKey = location.pathname
+  const { fetchUserInfo, userInfo, clearUserInfo } = useStore()
+
+  useEffect(() => {
+    fetchUserInfo()
+  }, [])
+
+  const menuClick = (route) => {
+    console.log("route", route)
+    navigate(route.key)
+  }
+
+  const loginOut = () => {
+    clearUserInfo()
+    navigate('/login')
+  }
+
   return (
     <Layout>
       <Header className="header">
         <div className="logo" />
         <div className="user-info">
-          <span className="user-name">柴柴老师</span>
+          <span className="user-name">{userInfo.name}</span>
           <span className="user-logout">
-            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
+            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消" onConfirm={loginOut} >
               <LogoutOutlined /> 退出
             </Popconfirm>
           </span>
@@ -47,11 +69,15 @@ const GeekLayout = () => {
             mode="inline"
             theme="dark"
             defaultSelectedKeys={['1']}
+            selectedKeys={selectedKey}
             items={items}
-            style={{ height: '100%', borderRight: 0 }}></Menu>
+            style={{ height: '100%', borderRight: 0 }}
+            onClick={menuClick}
+          >
+          </Menu>
         </Sider>
         <Layout className="layout-content" style={{ padding: 20 }}>
-          内容
+          <Outlet></Outlet>
         </Layout>
       </Layout>
     </Layout>
